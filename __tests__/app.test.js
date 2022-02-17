@@ -78,4 +78,73 @@ describe('All endpoints', () => {
         });
     });
   });
+  describe('Patch - /api/articles/:article_id', () => {
+    // checks if votes have been incremented
+    test('Status: 200 - Responds with votes incremented by inc_votes', () => {
+      const newVote = { inc_votes: 20 };
+      return request(app)
+        .patch('/api/articles/1')
+        .send(newVote)
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article.votes).toBe(120);
+        });
+    });
+    // test for decrementing votes
+    test('Status: 200 - Responds with votes decremented by inc_votes', () => {
+      const newVote = { inc_votes: -20 };
+      return request(app)
+        .patch('/api/articles/1')
+        .send(newVote)
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article.votes).toBe(80);
+        });
+    });
+    //write test for updated votes
+    test('status:200 - Responds with the updated article object while ignoring any keys other than inc_votes', () => {
+      const updatedArticle = {
+        inc_votes: 20,
+        other_key: 'other',
+      };
+      return request(app)
+        .patch('/api/articles/1')
+        .send(updatedArticle)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.article).toEqual({
+            article_id: 1,
+            title: 'Living in the shadow of a great man',
+            topic: 'mitch',
+            author: 'butter_bridge',
+            body: 'I find this existence challenging',
+            created_at: expect.any(String),
+            votes: 120,
+          });
+        });
+    });
+    //err handling:
+    // test err for invalid votes
+    test('status: 400 - Response with an error message for invalid votes', () => {
+      const newVote = { inc_votes: 'twenty' };
+      return request(app)
+        .patch('/api/articles/2')
+        .send(newVote)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe('Bad request');
+        });
+    });
+    //test err for empty obj passed
+    test('Status: 400 - Responds with error msg when user enters an empty vote', () => {
+      const newVote = {};
+      return request(app)
+        .patch('/api/articles/2')
+        .send(newVote)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe('Bad request');
+        });
+    });
+  });
 });

@@ -16,7 +16,18 @@ exports.fetchArticleById = (id) => {
     if (rows.length === 0) {
       return Promise.reject({ status: 404, msg: 'Article not found' });
     }
-    console.log(rows);
+    // console.log(rows);
+    return rows[0];
+  });
+};
+
+//#7 PATCH /api/articles/:article_id
+exports.updateArticleById = (article_id, inc_votes) => {
+  let queryStr = `UPDATE articles 
+  SET votes = votes + $1
+  WHERE article_id = $2 
+  RETURNING* ;`;
+  return db.query(queryStr, [inc_votes, article_id]).then(({ rows }) => {
     return rows[0];
   });
 };
