@@ -29,3 +29,11 @@ exports.updateArticleById = (article_id, inc_votes) => {
     return rows[0];
   });
 };
+
+//#21 GET /api/users
+exports.fetchUsers = () => {
+  let queryStr = `SELECT username FROM users`;
+  return db.query(queryStr).then(({ rows: users }) => {
+    return users;
+  });
+};

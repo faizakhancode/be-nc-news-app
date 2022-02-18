@@ -2,6 +2,7 @@ const {
   fetchTopics,
   fetchArticleById,
   updateArticleById,
+  fetchUsers,
 } = require('../models/news.model.js');
 
 //#3 GET api/topics
@@ -34,6 +35,17 @@ exports.patchArticleById = (req, res, next) => {
   updateArticleById(article_id, inc_votes)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+//#21 GET /api/users
+exports.getUsers = (req, res, next) => {
+  fetchUsers()
+    .then((users) => {
+      res.status(200).send({ users });
     })
     .catch((err) => {
       next(err);
