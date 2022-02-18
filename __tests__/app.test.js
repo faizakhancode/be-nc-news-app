@@ -148,7 +148,7 @@ describe('All endpoints', () => {
   });
   // #21GET /api/users
   describe('GET /api/users', () => {
-    test.only('status: 200 - Responds with user object which has the length of 4', () => {
+    test('status: 200 - Responds with user object which has the length of 4', () => {
       return request(app)
         .get('/api/users')
         .expect(200)
@@ -167,7 +167,5 @@ describe('All endpoints', () => {
           });
         });
     });
-    // write err handler: 404
-    //responds with not found for valid but non-existent username
   });
 });
