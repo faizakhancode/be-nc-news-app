@@ -2,6 +2,7 @@ const {
   fetchTopics,
   fetchArticleById,
   updateArticleById,
+  fetchArticles,
 } = require('../models/news.model.js');
 
 //#3 GET api/topics
@@ -34,6 +35,18 @@ exports.patchArticleById = (req, res, next) => {
   updateArticleById(article_id, inc_votes)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+//#9 GET /api/articles
+exports.getArticles = (req, res, next) => {
+  const { sort_by, order, topic } = req.query;
+  return fetchArticles(sort_by, order, topic)
+    .then((articles) => {
+      res.status(200).send({ articles });
     })
     .catch((err) => {
       next(err);

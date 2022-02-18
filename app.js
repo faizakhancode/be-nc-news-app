@@ -4,6 +4,7 @@ const {
   getTopics,
   getArticle,
   patchArticleById,
+  getArticles,
 } = require('./controllers/news.controller.js');
 
 const app = express();
@@ -16,6 +17,9 @@ app.get('/api/articles/:article_id', getArticle);
 
 //#7 PATCH /api/articles/:article_id
 app.patch('/api/articles/:article_id', patchArticleById);
+
+//#9 GET /api/articles
+app.get('/api/articles', getArticles);
 
 // handles 404- path err
 app.all('/api/*', (req, res) => {
