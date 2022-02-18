@@ -4,6 +4,7 @@ const {
   getTopics,
   getArticle,
   patchArticleById,
+  getUsers,
 } = require('./controllers/news.controller.js');
 
 const app = express();
@@ -17,12 +18,15 @@ app.get('/api/articles/:article_id', getArticle);
 //#7 PATCH /api/articles/:article_id
 app.patch('/api/articles/:article_id', patchArticleById);
 
+//#21 GET /api/users
+app.get('/api/users', getUsers);
+
 // handles 404- path err
 app.all('/api/*', (req, res) => {
   res.status(404).send({ msg: 'Path not found' });
 });
 
-//psql err handler - if err  22P02
+//psql err handler - 22P02 etc
 app.use((err, req, res, next) => {
   if (err.code === '22P02' || err.code === '23502')
     res.status(400).send({ msg: 'Bad request' });

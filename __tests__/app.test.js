@@ -146,4 +146,28 @@ describe('All endpoints', () => {
         });
     });
   });
+  // #21GET /api/users
+  describe('GET /api/users', () => {
+    test.only('status: 200 - Responds with user object which has the length of 4', () => {
+      return request(app)
+        .get('/api/users')
+        .expect(200)
+        .then((response) => {
+          // response object has a single key of users
+          expect(Object.keys(response.body)).toHaveLength(1);
+          expect(Object.keys(response.body)[0]).toEqual('users');
+          // arr of user objects is the expected length
+          expect(response.body.users).toHaveLength(4);
+          response.body.users.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    // write err handler: 404
+    //responds with not found for valid but non-existent username
+  });
 });
