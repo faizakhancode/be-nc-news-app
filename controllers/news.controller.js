@@ -11,7 +11,6 @@ exports.getTopics = (req, res, next) => {
       res.status(200).send({ topics });
     })
     .catch((err) => {
-      // console.log(err);
       next(err);
     });
 };
@@ -24,14 +23,12 @@ exports.getArticle = (req, res, next) => {
       res.status(200).send({ article });
     })
     .catch((err) => {
-      // console.log(err);
       next(err);
     });
 };
 
 //#7 PATCH /api/articles/:article_id
 exports.patchArticleById = (req, res, next) => {
-  // console.log(req.params);
   const { article_id } = req.params;
   const { inc_votes } = req.body;
   updateArticleById(article_id, inc_votes)

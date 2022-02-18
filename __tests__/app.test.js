@@ -47,7 +47,6 @@ describe('All endpoints', () => {
           const {
             body: { article },
           } = response;
-          // console.log(article, '<----- TEST');
           expect(article).toEqual({
             article_id: 1,
             title: 'Living in the shadow of a great man',
