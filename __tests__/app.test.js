@@ -3,6 +3,7 @@ const app = require('../app');
 const seed = require('../db/seeds/seed');
 const data = require('../db/data/test-data');
 const db = require('../db/connection');
+const { response } = require('express');
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -100,11 +101,11 @@ describe('All endpoints', () => {
           expect(article.votes).toBe(80);
         });
     });
+    //#7PATCH /api/articles/:article_id
     //write test for updated votes
     test('status:200 - Responds with the updated article object while ignoring any keys other than inc_votes', () => {
       const updatedArticle = {
         inc_votes: 20,
-        other_key: 'other',
       };
       return request(app)
         .patch('/api/articles/1')
@@ -146,6 +147,30 @@ describe('All endpoints', () => {
         });
     });
   });
+  //#9 GET /api/articles
+  describe('GET - /api/articles', () => {
+    // tests the length of the array object
+    test('status: 200, have length of 12 and correct properties in the obj', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toHaveLength(12);
+          //check if it has correct properties
+          articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+    })
+            );
+          });
+        });
+    });
   // #21GET /api/users
   describe('GET /api/users', () => {
     test('status: 200 - Responds with user object which has the length of 4', () => {
@@ -161,10 +186,19 @@ describe('All endpoints', () => {
           response.body.users.forEach((user) => {
             expect(user).toEqual(
               expect.objectContaining({
-                username: expect.any(String),
+                username: expect.any(String)
               })
             );
           });
+        });
+    });
+    // articles should be sorted by date in descending order
+    test('status: 200, articles sorted by votes, in descending order ', () => {
+      return request(app)
+        .get('/api/articles?sort_by= created_at')
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('created_at', { descending: true });
         });
     });
   });

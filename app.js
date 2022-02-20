@@ -4,6 +4,7 @@ const {
   getTopics,
   getArticle,
   patchArticleById,
+  getArticles,
   getUsers,
 } = require('./controllers/news.controller.js');
 
@@ -18,8 +19,13 @@ app.get('/api/articles/:article_id', getArticle);
 //#7 PATCH /api/articles/:article_id
 app.patch('/api/articles/:article_id', patchArticleById);
 
+
+//#9 GET /api/articles
+app.get('/api/articles', getArticles);
+
 //#21 GET /api/users
 app.get('/api/users', getUsers);
+
 
 // handles 404- path err
 app.all('/api/*', (req, res) => {
