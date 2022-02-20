@@ -3,7 +3,7 @@ const {
   fetchArticleById,
   updateArticleById,
   fetchArticles,
- fetchUsers,
+  fetchUsers,
 } = require('../models/news.model.js');
 
 //#3 GET api/topics
@@ -45,11 +45,11 @@ exports.patchArticleById = (req, res, next) => {
 //#9 GET /api/articles
 exports.getArticles = (req, res, next) => {
   const { sort_by, order, topic } = req.query;
-  return fetchArticles(sort_by, order, topic)
-    .then((articles) => {
-      res.status(200).send({ articles });
+  return fetchArticles(sort_by, order, topic).then((articles) => {
+    res.status(200).send({ articles });
+  });
+};
 
-    
 //#21 GET /api/users
 exports.getUsers = (req, res, next) => {
   fetchUsers()
