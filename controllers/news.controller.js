@@ -3,6 +3,7 @@ const {
   fetchArticleById,
   updateArticleById,
   fetchArticles,
+ fetchUsers,
 } = require('../models/news.model.js');
 
 //#3 GET api/topics
@@ -47,6 +48,13 @@ exports.getArticles = (req, res, next) => {
   return fetchArticles(sort_by, order, topic)
     .then((articles) => {
       res.status(200).send({ articles });
+
+    
+//#21 GET /api/users
+exports.getUsers = (req, res, next) => {
+  fetchUsers()
+    .then((users) => {
+      res.status(200).send({ users });
     })
     .catch((err) => {
       next(err);
