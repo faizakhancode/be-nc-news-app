@@ -56,6 +56,7 @@ describe('All endpoints', () => {
             body: 'I find this existence challenging',
             created_at: expect.any(String),
             votes: 100,
+            comment_count: '11',
           });
         });
     });
@@ -171,36 +172,57 @@ describe('All endpoints', () => {
           });
         });
     });
-    // #21GET /api/users
-    describe('GET /api/users', () => {
-      test('status: 200 - Responds with user object which has the length of 4', () => {
-        return request(app)
-          .get('/api/users')
-          .expect(200)
-          .then((response) => {
-            // response object has a single key of users
-            expect(Object.keys(response.body)).toHaveLength(1);
-            expect(Object.keys(response.body)[0]).toEqual('users');
-            // arr of user objects is the expected length
-            expect(response.body.users).toHaveLength(4);
-            response.body.users.forEach((user) => {
-              expect(user).toEqual(
-                expect.objectContaining({
-                  username: expect.any(String),
-                })
-              );
-            });
-          });
-      });
-      // articles should be sorted by date in descending order
-      test('status: 200, articles sorted by votes, in descending order ', () => {
-        return request(app)
-          .get('/api/articles?sort_by= created_at')
-          .expect(200)
-          .then(({ body: { articles } }) => {
-            expect(articles).toBeSortedBy('created_at', { descending: true });
-          });
-      });
+    // #5 GET/api/articles/articleid/commentCount
+    test('status 200 - responds with an array of objects', () => {
+      return request(app)
+        .get('/api/articles/1')
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: 1,
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              topic: expect.any(String),
+              comment_count: expect.any(String),
+            })
+          );
+        });
     });
+  });
+});
+
+// #21GET /api/users
+describe('GET /api/users', () => {
+  test('status: 200 - Responds with user object which has the length of 4', () => {
+    return request(app)
+      .get('/api/users')
+      .expect(200)
+      .then((response) => {
+        // response object has a single key of users
+        expect(Object.keys(response.body)).toHaveLength(1);
+        expect(Object.keys(response.body)[0]).toEqual('users');
+        // arr of user objects is the expected length
+        expect(response.body.users).toHaveLength(4);
+        response.body.users.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  // articles should be sorted by date in descending order
+  test('status: 200, articles sorted by votes, in descending order ', () => {
+    return request(app)
+      .get('/api/articles?sort_by= created_at')
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy('created_at', { descending: true });
+      });
   });
 });

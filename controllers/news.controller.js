@@ -45,9 +45,17 @@ exports.patchArticleById = (req, res, next) => {
 //#9 GET /api/articles
 exports.getArticles = (req, res, next) => {
   const { sort_by, order, topic } = req.query;
-  return fetchArticles(sort_by, order, topic).then((articles) => {
-    res.status(200).send({ articles });
-  });
+
+  return Promise.all([
+    fetchArticles(sort_by, order, topic),
+    topic ? checkTopicExists(topic) : null,
+  ])
+    .then(([articles]) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 //#21 GET /api/users
@@ -60,3 +68,5 @@ exports.getUsers = (req, res, next) => {
       next(err);
     });
 };
+
+//# 5 GET /api/articles/:article:id (comment count)
