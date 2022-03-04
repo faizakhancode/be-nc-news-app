@@ -10,7 +10,7 @@ exports.fetchTopics = () => {
 
 //#14 GET api/articles/:article_id
 exports.fetchArticleById = (id) => {
-  let queryStr = `SELECT * FROM articles WHERE article_id = $1;`;
+  let queryStr = `SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id;`;
   return db.query(queryStr, [id]).then(({ rows }) => {
     if (rows.length === 0) {
       return Promise.reject({ status: 404, msg: 'Article not found' });
@@ -48,3 +48,5 @@ exports.fetchUsers = () => {
     return users;
   });
 };
+
+//# 5 GET /api/articles/:article:id (comment count)
